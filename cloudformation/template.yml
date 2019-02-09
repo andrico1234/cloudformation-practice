@@ -1,0 +1,25 @@
+Resources:
+  StaticGameSiteBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+      AccessControl: PublicRead
+      BucketName: static-game-site
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: False
+        BlockPublicPolicy: False
+        IgnorePublicAcls: False
+        RestrictPublicBuckets: False
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: error.html
+      Tags:
+        - Key: S3-bucket
+          Value: static-game-site
+Outputs:
+  WebsiteUrl:
+    Value: !GetAtt [StaticGameSiteBucket, WebsiteURL]
+    Description: Url for game static-game-site
+  S3BucketSecureURL:
+    Value: !Join ["", ["https://", !GetAtt [StaticGameSiteBucket, WebsiteURL]]]
+    Description: Name of bucket to hold game site
