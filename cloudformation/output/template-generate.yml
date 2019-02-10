@@ -32,3 +32,32 @@ Resources:
         ErrorDocument: error.html
         IndexDocument: index.html
     Type: AWS::S3::Bucket
+  StaticGameSiteDB:
+    Properties:
+      AttributeDefinitions:
+      - AttributeName: Id
+        AttributeType: S
+      - AttributeName: Name
+        AttributeType: S
+      - AttributeName: Score
+        AttributeType: N
+      BillingMode: PROVISIONED
+      KeySchema:
+      - AttributeName: Id
+        KeyType: HASH
+      - AttributeName: Score
+        KeyType: RANGE
+      LocalSecondaryIndexes:
+      - IndexName: NameIndex
+        KeySchema:
+        - AttributeName: Id
+          KeyType: HASH
+        - AttributeName: Name
+          KeyType: RANGE
+        Projection:
+          ProjectionType: KEYS_ONLY
+      ProvisionedThroughput:
+        ReadCapacityUnits: 2
+        WriteCapacityUnits: 2
+      TableName: GameScores
+    Type: AWS::DynamoDB::Table

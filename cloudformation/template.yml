@@ -16,6 +16,35 @@ Resources:
       Tags:
         - Key: S3-bucket
           Value: static-game-site
+  StaticGameSiteDB:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: Id
+          AttributeType: S
+        - AttributeName: Name
+          AttributeType: S
+        - AttributeName: Score
+          AttributeType: N
+      BillingMode: PROVISIONED
+      KeySchema:
+        - AttributeName: Id
+          KeyType: HASH
+        - AttributeName: Score
+          KeyType: RANGE
+      LocalSecondaryIndexes:
+        - IndexName: NameIndex
+          KeySchema:
+            - AttributeName: Id
+              KeyType: HASH
+            - AttributeName: Name
+              KeyType: RANGE
+          Projection:
+            ProjectionType: KEYS_ONLY
+      TableName: GameScores
+      ProvisionedThroughut:
+        ReadCapacityUnits: 2
+        WriteCapacityUnits: 2
 Outputs:
   WebsiteUrl:
     Value: !GetAtt [StaticGameSiteBucket, WebsiteURL]
